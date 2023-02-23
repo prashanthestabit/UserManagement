@@ -303,7 +303,7 @@ class UsersControllerTest extends TestCase
      */
     public function testUpdateUserWithInvalidToken()
     {
-
+        //Create new User
         $user = User::factory()->create();
 
         $name =  $this->faker->name;
