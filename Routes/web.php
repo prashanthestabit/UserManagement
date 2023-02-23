@@ -11,6 +11,4 @@
 |
 */
 
-Route::prefix('UserManagement')->group(function() {
-    Route::get('/', 'UserManagementController@index');
-});
+

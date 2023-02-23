@@ -21,7 +21,6 @@ class UsersController extends Controller
      */
     public function index(AuthenticateRequest $request)
     {
-
         try{
             $page = $request->input('page');
             $user = JWTAuth::authenticate($request->input('token'));
@@ -88,10 +87,9 @@ class UsersController extends Controller
      */
     public function show(AuthenticateRequest $request,$id)
     {
-
         try{
             JWTAuth::authenticate($request->input('token'));
-            $user = User::findOrFail($id);
+            $user = User::find($id);
             if(!$user){
                 return response()->json([
                     'status' => false,
@@ -121,14 +119,21 @@ class UsersController extends Controller
     {
         try{
             JWTAuth::authenticate($request->input('token'));
-            $user = User::firstOrCreate(['id'=> $request->input('id')],[
+            $user = User::whereId($request->input('id'))->update([
                 'name' => $request->input('name'),
                 'email'=> $request->input('email')
             ]);
-            return response()->json([
-                'status'  => true,
-                'message' => 'User Updated Successfully'
-            ],Response::HTTP_OK);
+            if($user){
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'User Updated Successfully'
+                ],Response::HTTP_OK);
+            }else{
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Sorry!! Try again'
+                ],Response::HTTP_BAD_REQUEST);
+            }
         }catch(JWTException $e){
             return response()->json([
                 'status'  => false,
