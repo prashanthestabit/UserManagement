@@ -14,6 +14,21 @@ class UsersControllerTest extends TestCase
 {
     use WithFaker, DatabaseTransactions;
 
+    protected $listDataStructure = [
+            'data',
+            'current_page',
+            'first_page_url',
+            'from',
+            'last_page',
+            'last_page_url',
+            'next_page_url',
+            'path',
+            'per_page',
+            'prev_page_url',
+            'to',
+            'total',
+        ];
+
     /**
      * 1. Test fetch users list API endpoint with valid token.
      *
@@ -36,24 +51,11 @@ class UsersControllerTest extends TestCase
         $response->assertJsonStructure([
             'status',
             'message',
-            'data' => [
-                'data',
-                'current_page',
-                'first_page_url',
-                'from',
-                'last_page',
-                'last_page_url',
-                'next_page_url',
-                'path',
-                'per_page',
-                'prev_page_url',
-                'to',
-                'total',
-            ],
+            'data' => $this->listDataStructure,
         ]);
         $response->assertJson([
             'status' => true,
-            'message' => 'Users List Fetched Successfully',
+            'message' => __('UserManagement::messages.user.successfully_list')
         ]);
     }
 
@@ -75,7 +77,7 @@ class UsersControllerTest extends TestCase
             'status',
         ]);
         $response->assertJson([
-            'status' => 'Token is Invalid',
+            'status' => __('UserManagement::messages.invalid_token'),
         ]);
     }
 
@@ -116,7 +118,7 @@ class UsersControllerTest extends TestCase
         ]);
         $response->assertJson([
             'status' => true,
-            'message' => 'User Registered Successfully',
+            'message' => __('UserManagement::messages.user.successfully_registered'),
             'data' => [
                 'name' => $name,
                 'email' => $email,
@@ -189,7 +191,7 @@ class UsersControllerTest extends TestCase
             'status',
         ]);
         $response->assertJson([
-            'status' => 'Token is Invalid',
+            'status' => __('UserManagement::messages.invalid_token'),
         ]);
     }
 
@@ -210,7 +212,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'status' => true,
-                'message' => 'Details Fetched Successfully',
+                'message' => __('UserManagement::messages.user.successfully_fetched'),
                 'data' => [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -239,7 +241,7 @@ class UsersControllerTest extends TestCase
             'status',
         ]);
         $response->assertJson([
-            'status' => 'Token is Invalid',
+            'status' => __('UserManagement::messages.invalid_token'),
         ]);
     }
 
@@ -257,7 +259,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_BAD_REQUEST)
             ->assertJson([
                 'status' => false,
-                'message' => 'Failed to fetch the details',
+                'message' => __('UserManagement::messages.user.failed'),
             ]);
     }
 
@@ -287,7 +289,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson([
                 'status' => true,
-                'message' => 'User Updated Successfully',
+                'message' => __('UserManagement::messages.user.successfully_updated'),
             ]);
 
         $updatedUser = User::find($user->id);
@@ -318,7 +320,7 @@ class UsersControllerTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'status' => 'Token is Invalid',
+                'status' => __('UserManagement::messages.invalid_token'),
             ]);
 
         $updatedUser = User::find($user->id);
@@ -352,7 +354,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_BAD_REQUEST)
             ->assertJson([
                 'status' => false,
-                'message' => 'Sorry!! Try again',
+                'message' => __('UserManagement::messages.try_again'),
             ]);
 
         $updatedUser = User::find($user->id);
