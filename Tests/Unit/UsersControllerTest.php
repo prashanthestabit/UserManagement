@@ -463,9 +463,9 @@ class UsersControllerTest extends TestCase
         ]);
 
           // Assert that the roles exist in the database
-            $this->assertDatabaseHas('roles', [
-                'id' => $role->pluck('id')->toArray()
-            ]);
+        $this->assertDatabaseHas('roles', [
+            'id' => $role->pluck('id')->toArray()
+        ]);
 
 
         // Make a get request to the API
@@ -525,42 +525,32 @@ class UsersControllerTest extends TestCase
      *
      * @return void
      */
-    // public function testFetchUserWithNonExistenetIdAndValidToken()
-    // {
+    public function testFetchUserWithNonExistenetIdAndValidToken()
+    {
 
-    //     // Create a user and generate a valid JWT token
-    //     $token = $this->getUserToken();
+        // Create a user and generate a valid JWT token
+        $token = $this->getUserToken();
 
-    //     $userId = 999;
+        $userId = 999;
 
-    //     $role = Roles::factory()->count(2)->create();
+         // Assert that the check user not exist in the database
+         $this->assertDatabaseMissing('users', [
+            'id' => $userId,
+        ]);
 
-    //     // Create a user and some roles
-    //     $userRole1 = UserRole::factory()->create(['user_id' => $userId,'role_id' => $role[0]->id]);
-    //     $userRole2 = UserRole::factory()->create(['user_id' => $userId,'role_id' => $role[1]->id]);
+        // Make a get request to the API
+        $response = $this->get(route('get_user_role',['id'=>$userId,'token' => $token]));
 
-    //      // Assert that the check user not exist in the database
-    //      $this->assertDatabaseMissing('users', [
-    //         'id' => $userId,
-    //     ]);
+        // Assert that the response status code is 200 (OK)
+        $response->assertStatus(Response::HTTP_OK);
 
-    //       // Assert that the roles exist in the database
-    //         $this->assertDatabaseHas('roles', [
-    //             'id' => $role->pluck('id')->toArray()
-    //         ]);
-
-
-    //     // Make a get request to the API
-    //     $response = $this->get(route('get_user_role',['id'=>$userId,'token' => $token]));
-
-    //     // Assert that the response status code is 200 (OK)
-    //     $response->assertStatus(Response::HTTP_OK);
-
-    //     // Assert that the response contains the expected data
-    //     $response->assertJson([
-    //         'status'  => __('UserManagement::messages.invalid_token'),
-    //     ]);
-    // }
+        // Assert that the response contains the expected data
+        $response->assertJson([
+            'status'  => true,
+            'message' => __('UserManagement::messages.user.role.fetch'),
+            'data'    => []
+        ]);
+    }
 
     /**
      * 18. Test assign role to user with valid token
