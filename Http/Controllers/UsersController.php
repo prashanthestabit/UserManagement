@@ -19,11 +19,11 @@ class UsersController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index(AuthenticateRequest $request)
+    public function index(Request $request)
     {
         try{
             $page = $request->input('page');
-            $user = JWTAuth::authenticate($request->input('token'));
+
             $users = User::paginate($request->input('per_page'));
             if(!$users){
                 return response()->json([
@@ -33,7 +33,7 @@ class UsersController extends Controller
             }
             return response()->json([
                 'status'  =>  true,
-                'message' => 'Users List Fetched Successfully',
+                'message' => __('UserManagement::messages.user.successfully_list'),
                 'data'    => $users
             ],Response::HTTP_OK);
         }catch(JWTException $e){
@@ -52,7 +52,6 @@ class UsersController extends Controller
     public function store(UserCreateRequest $request)
     {
         try{
-            JWTAuth::authenticate($request->input('token'));
             $user = User::create([
                 'name'     => $request->input('name'),
                 'email'    => $request->input('email'),
@@ -85,10 +84,9 @@ class UsersController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(AuthenticateRequest $request,$id)
+    public function show(Request $request,$id)
     {
         try{
-            JWTAuth::authenticate($request->input('token'));
             $user = User::find($id);
             if(!$user){
                 return response()->json([
@@ -118,7 +116,7 @@ class UsersController extends Controller
     public function update(UserCreateRequest $request)
     {
         try{
-            JWTAuth::authenticate($request->input('token'));
+
             $user = User::whereId($request->input('id'))->update([
                 'name' => $request->input('name'),
                 'email'=> $request->input('email')
@@ -147,11 +145,9 @@ class UsersController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(AuthenticateRequest $request,$id)
+    public function destroy(Request $request,$id)
     {
-
         try{
-            JWTAuth::authenticate($request->input('token'));
             $user = User::findOrFail($id);
             $user->delete();
             return response()->json([

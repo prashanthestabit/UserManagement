@@ -4,16 +4,15 @@ namespace Modules\UserManagement\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\UserManagement\Emails\ForgetPasswordMail;
-use Modules\UserManagement\Entities\Roles;
 use Modules\UserManagement\Entities\UserRole;
 use Modules\UserManagement\Http\Requests\AssignRoleRequest;
-use Modules\UserManagement\Http\Requests\AuthenticateRequest;
 use Modules\UserManagement\Http\Requests\AuthLoginRequest;
 use Modules\UserManagement\Http\Requests\ChangePasswordRequest;
 use Modules\UserManagement\Http\Requests\ForgetPasswordRequest;
@@ -132,13 +131,12 @@ class ApiController extends Controller
     /**
      *
      * Verify the token and make User Logged out
-     * @param AuthenticateRequest $request
+     * @param Request $request
      * @return response
      *
      */
-    public function logout(AuthenticateRequest $request)
+    public function logout(Request $request)
     {
-
         try{
             JWTAuth::invalidate($request->input('token'));
             return response()->json([
@@ -156,13 +154,12 @@ class ApiController extends Controller
     /**
      *
      *  Verify the token and fetched the user information
-     * @param AuthenticateRequest $request
+     * @param Request $request
      * @return response
      *
      */
-    public function getUser(AuthenticateRequest $request)
+    public function getUser(Request $request)
     {
-
         try{
             $user = JWTAuth::authenticate($request->input('token'));
             return response()->json([
@@ -215,7 +212,6 @@ class ApiController extends Controller
      */
     public function changePassword(ChangePasswordRequest $request)
     {
-
         try{
             $user = JWTAuth::authenticate($request->input('token'));
             $old_password = Hash::make($request->input('old_password'));
@@ -245,20 +241,19 @@ class ApiController extends Controller
     /**
      * Fetch the user roles
      *
-     * @param AuthenticateRequest $request
+     * @param Request $request
      * @param int $id
      * @return response
      */
-    public function userRole(AuthenticateRequest $request,$id)
+    public function userRole(Request $request,$id)
     {
         try{
-            JWTAuth::authenticate($request->input('token'));
-            $userRole = UserRole::with('userRole','userData')->where('user_id',$id)->get();
+            $userRole = User::with('userRoles.Roles')->where('id',$id)->first();
             if(!$userRole){
                 return response()->json([
                     'status'  => false,
-                    'message' => 'No Role Assigned To User',
-                ],Response::HTTP_NO_CONTENT);
+                    'message' => 'User Not Found',
+                ],Response::HTTP_BAD_REQUEST);
             }
             return response()->json([
                 'status'  => true,
@@ -283,7 +278,6 @@ class ApiController extends Controller
     public function assignRole(AssignRoleRequest $request,$id)
     {
         try{
-            JWTAuth::authenticate($request->input('token'));
             $role = UserRole::create([
                 'user_id' => $id,
                 'role_id' => $request->input('role_id')
@@ -309,16 +303,14 @@ class ApiController extends Controller
     /**
      * Remove the roles assigned to user
      *
-     * @param AuthenticateRequest $request
+     * @param Request $request
      * @param integer $user_id
      * @param integer $role_id
      * @return void
      */
-    public function removeUserRole(AuthenticateRequest $request,$user_id,$role_id)
+    public function removeUserRole(Request $request,$user_id,$role_id)
     {
-
         try{
-            JWTAuth::authenticate($request->input('token'));
             $check = UserRole::where('user_id',$user_id)->where('role_id',$role_id)->first();
             if(!$check){
                 return response()->json([

@@ -18,12 +18,12 @@ use Modules\UserManagement\Http\Controllers\UsersController;
     Route::group(['middleware' => ['jwt.verify']], function() {
         Route::get('users',[UsersController::class,'index'])->name('users.list');
         Route::post('users/store',[UsersController::class,'store'])->name('users.store');
-        Route::get('users/{id}',[UsersController::class,'show'])->name('users.show');
+        Route::get('users/{id}',[UsersController::class,'show'])->where('id', '[0-9]+')->name('users.show');
 
         Route::put('users/update',[UsersController::class,'update'])->name('users.update');
-        Route::delete('users/{id}',[UsersController::class,'destroy'])->name('users.delete');
+        Route::delete('users/{id}',[UsersController::class,'destroy'])->where('id', '[0-9]+')->name('users.delete');
 
-        Route::get('user/{id}/roles',[ApiController::class,'userRole'])->name('get_user_role');
-        Route::post('user/{id}/role',[ApiController::class,'assignRole'])->name('assign.role');
-        Route::delete('users/{id}/role/{role_id}',[ApiController::class,'removeUserRole'])->name('remove.user_role');
+        Route::get('user/{id}/roles',[ApiController::class,'userRole'])->where('id', '[0-9]+')->name('get_user_role');
+        Route::post('user/{id}/role',[ApiController::class,'assignRole'])->where('id', '[0-9]+')->name('assign.role');
+        Route::delete('users/{id}/role/{role_id}',[ApiController::class,'removeUserRole'])->where('id', '[0-9]+')->where('role_id','[0-9]+')->name('remove.user_role');
     });
