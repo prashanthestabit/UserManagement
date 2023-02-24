@@ -4,6 +4,7 @@ return [
 
     'user' => [
         'successfully_list' => 'Users List Fetched Successfully',
+        'failed_list'=> 'Failed to fetch th user',
         'successfully_registered' => 'User Registered Successfully',
         'successfully_fetched' => 'Details Fetched Successfully',
         'successfully_updated' => 'User Updated Successfully',
