@@ -7,7 +7,11 @@ return [
         'successfully_registered' => 'User Registered Successfully',
         'successfully_fetched' => 'Details Fetched Successfully',
         'successfully_updated' => 'User Updated Successfully',
-        'failed' => 'Failed to fetch the details'
+        'failed' => 'Failed to fetch the details',
+        'role' => [
+            'fetch' => 'User Role Fetch Successfully',
+            'assigned' => 'Role Assigned Successfully'
+        ],
     ],
     'error' => 'Error!!',
     'invalid_token' => 'Token is Invalid',
