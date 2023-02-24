@@ -43,7 +43,7 @@ message in JSON Format.
 2) Create User
 
 ```bash
-URL:- http://127.0.0.1/api/users/store
+URL:- /api/users/store
 Method:- POST
 Request Body:- token (required), name(required,string,max:255), email(required,email,unique),
 password (required,string,min:6.max:50,confirmation), password_confirmation (same as password).
@@ -58,7 +58,7 @@ message in JSON Format.
 3) Fecth User Details By Id
 
 ```bash
-URL:- http://127.0.0.1/api/users/{id}
+URL:- /api/users/{id}
 Method:- GET
 Request Body:- token (required)
 Response:- 
@@ -73,7 +73,7 @@ message in JSON Format.
 4) Update User Details
 
 ```bash
-URL:- http://127.0.0.1/api/users/update
+URL:- /api/users/update
 Method:- PUT
 Request Body:- token (required), name(string,max:255), email(email,unique)
 Response:- 
@@ -88,7 +88,7 @@ message in JSON Format.
 5) Delete User
 
 ```bash
-URL:- http://127.0.0.1/api/users/{id}
+URL:- /api/users/{id}
 Method:- DELETE
 Request Body:- token (required)
 Response:- 
@@ -102,7 +102,7 @@ Error with error message in JSON Format.
 6) Fetch The Roles Assign To User
 
 ```bash
-URL:- http://127.0.0.1/api/user/{id}/roles
+URL:- /api/user/{id}/roles
 Method:- GET
 Request Body:- token (required)
 Response:- 
@@ -115,7 +115,7 @@ error message in JSON Format.
 7) Assign Role To User
 
 ```bash
-URL:- http://127.0.0.1/api/user/{id}/role
+URL:- /api/user/{id}/role
 Method:- POST
 Request Body:- token (required), role_id (required,integer)
 Response:- 
@@ -129,7 +129,7 @@ response code:- 500 Internal Server Error with error message in JSON Format.
 8) Assign Role To User
 
 ```bash
-URL:- http://127.0.0.1/api/user/{id}/role/{role_id}
+URL:- /api/user/{id}/role/{role_id}
 Method:- DELETE
 Request Body:- token (required)
 Response:- 
