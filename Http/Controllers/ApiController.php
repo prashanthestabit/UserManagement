@@ -41,13 +41,13 @@ class ApiController extends Controller
             $user['token'] = JWTAuth::attempt($request->only(['email','password']));
             return response()->json([
                 'status'  => true,
-                'message' => 'User Registered Successfully',
+                'message' => __('UserManagement::messages.user.successfully_registered'),
                 'data'    => $user
             ],Response::HTTP_OK);
         }else{
             return response()->json([
                 'status'  => false,
-                'message' => 'Failed To Register User',
+                'message' => __('UserManagement::messages.user.failed_register'),
                 'data'    => array()
             ],Response::HTTP_BAD_REQUEST);
         }
@@ -67,18 +67,18 @@ class ApiController extends Controller
             if(!$token = JWTAuth::attempt($request->only(['email','password']))){
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Login credentials are invalid'
+                    'message' => __('UserManagement::messages.login_invalid'),
                 ],Response::HTTP_BAD_REQUEST);
             }
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Could not create token'
+                'message' => __('UserManagement::messages.token_failed'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return response()->json([
             'status' => 'true',
-            'message' => 'Login Successfully',
+            'message' => __('UserManagement::messages.login_success'),
             'token' => $token
         ],Response::HTTP_OK);
     }
@@ -98,7 +98,7 @@ class ApiController extends Controller
             if(!$user){
                 return response()->json([
                     'status' => false ,
-                    'message' => 'User Not Found'
+                    'message' => __('UserManagement::messages.user.user_not_found'),
                 ],Response::HTTP_NOT_FOUND);
             }
             $pass = Str::random(6);
@@ -112,18 +112,18 @@ class ApiController extends Controller
             if(Mail::failures()){
                 return response()->json([
                     'status' => false,
-                    'message' => 'Failed to send the mail'
+                    'message' => __('UserManagement::messages.failed_mail'),
                 ],Response::HTTP_UNAUTHORIZED);
             }else{
                 return response()->json([
                     'status' => true,
-                    'message' => 'Mail Sent Successfully'
+                    'message' => __('UserManagement::messages.success_mail'),
                 ],Response::HTTP_OK);
             }
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Failed'
+                'message' => __('UserManagement::messages.failed'),
             ],Response::HTTP_BAD_REQUEST);
 
         }
@@ -142,12 +142,12 @@ class ApiController extends Controller
             JWTAuth::invalidate($request->input('token'));
             return response()->json([
                 'status' => true,
-                'message' => 'User has been logged out'
+                'message' => __('UserManagement::messages.user_logout'),
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Sorry user cannot be logged out',
+                'message' => __('UserManagement::messages.failed_logout'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -165,13 +165,13 @@ class ApiController extends Controller
             $user = JWTAuth::authenticate($request->input('token'));
             return response()->json([
                 'status' => true,
-                'message' => 'Details Fetch Successfully',
+                'message' => __('UserManagement::messages.success_get_user'),
                 'data' => $user
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Failed to fetch the user details'
+                'message' => __('UserManagement::messages.failed_get_user'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -193,13 +193,13 @@ class ApiController extends Controller
             $user = User::find($authenticate->id);
             return response()->json([
                 'status' => true,
-                'message' => 'User updated successfully',
+                'message' => __('UserManagement::messages.success_user_updated'),
                 'data' => $user
             ], Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Failed to update the user details'
+                'message' => __('UserManagement::messages.failed_user_updated'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -220,20 +220,20 @@ class ApiController extends Controller
             if(!$userUpdate){
                 return response()->json([
                     'status' => false,
-                    'message' => 'User Not Found',
+                    'message' => __('UserManagement::messages.user.user_not_found'),
                 ], Response::HTTP_NOT_FOUND);
             }
             $userUpdate->password = Hash::make($request->input('password'));
             $userUpdate->update();
             return response()->json([
                 'status' => true,
-                'message' => 'Password Updated Successfully',
+                'message' => __('UserManagement::messages.success_password'),
                 'data' => $user
             ], Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Failed to update the password',
+                'message' => __('UserManagement::messages.failed_password'),
                 'data' => array()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -253,18 +253,18 @@ class ApiController extends Controller
             if(!$userRole){
                 return response()->json([
                     'status'  => false,
-                    'message' => 'User Not Found',
+                    'message' => __('UserManagement::messages.user.user_not_found'),
                 ],Response::HTTP_BAD_REQUEST);
             }
             return response()->json([
                 'status'  => true,
-                'message' => 'User Role Fetch Successfully',
+                'message' => __('UserManagement::messages.roles.success_user_roles_list'),
                 'data'    => $userRole
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid Access',
+                'message' => __('UserManagement::messages.invalid_access'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -286,17 +286,17 @@ class ApiController extends Controller
             if(!$role){
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Failed To Assign Role To User',
+                    'message' => __('UserManagement::messages.roles.failed_to_assign_role'),
                 ],Response::HTTP_BAD_REQUEST);
             }
             return response()->json([
                 'status'  => true,
-                'message' => 'Role Assigned Successfully',
+                'message' => __('UserManagement::messages.roles.successfully_assigned'),
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid Access',
+                'message' => __('UserManagement::messages.invalid_access'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -316,18 +316,19 @@ class ApiController extends Controller
             if(!$check){
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Role Not Assigned To User',
+                    'message' => __('UserManagement::messages.roles.roles_not_assigned'),
                 ],Response::HTTP_NO_CONTENT);
             }
             $check->delete();
             return response()->json([
                 'status'  => true,
+                'message' => __('UserManagement::messages.roles.roles_removed'),
                 'message' => 'Role Removed Successfully',
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid Access',
+                'message' => __('UserManagement::messages.invalid_access'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
