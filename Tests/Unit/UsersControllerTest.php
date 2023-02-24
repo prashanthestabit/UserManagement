@@ -474,7 +474,7 @@ class UsersControllerTest extends TestCase
         // Assert that the response status code is 200 (OK)
         $response->assertStatus(Response::HTTP_OK);
 
-        // Assert that the response contains the expected data
+       // Assert that the response contains the expected data
         $response->assertJson([
             'status'  => true,
             'message' => __('UserManagement::messages.user.role.fetch'),

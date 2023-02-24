@@ -19,6 +19,7 @@ use Modules\UserManagement\Http\Requests\ForgetPasswordRequest;
 use Modules\UserManagement\Http\Requests\UserRegisterRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Collection;
 
 class ApiController extends Controller
 {
@@ -248,7 +249,7 @@ class ApiController extends Controller
     public function userRole(Request $request,$id)
     {
         try{
-            $userRole = User::with('userRoles.Roles')->where('id',$id)->first();
+            $userRole = UserRole::with('Roles','userData')->where('user_id',$id)->get();
             if(!$userRole){
                 return response()->json([
                     'status'  => false,
