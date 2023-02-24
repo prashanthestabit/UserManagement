@@ -21,7 +21,7 @@ use Modules\UserManagement\Http\Controllers\UsersController;
         Route::get('users/{id}',[UsersController::class,'show'])->name('users.show');
 
         Route::put('users/update',[UsersController::class,'update'])->name('users.update');
-        Route::delete('users/{id}',[UsersController::class,'destroy']);
+        Route::delete('users/{id}',[UsersController::class,'destroy'])->name('users.delete');
 
         Route::get('user/{id}/roles',[ApiController::class,'userRole'])->name('get_user_role');
         Route::post('user/{id}/role',[ApiController::class,'assignRole'])->name('assign.role');

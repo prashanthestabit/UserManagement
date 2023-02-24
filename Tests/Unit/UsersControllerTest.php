@@ -5,6 +5,8 @@ namespace Modules\UserManagement\Tests\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Modules\UserManagement\Entities\Roles;
+use Modules\UserManagement\Entities\UserRole;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
@@ -362,6 +364,130 @@ class UsersControllerTest extends TestCase
         $this->assertEquals($user->name, $updatedUser->name);
         $this->assertEquals($user->email, $updatedUser->email);
     }
+
+    /**
+     * 12. Test delete user with id and Valid Token
+     *
+     * @return void
+     */
+    public function testDeleteUserWithValidToken()
+    {
+        // Create a user and generate a valid JWT token
+        $token = $this->getUserToken();
+
+        // Create a user
+        $user = User::factory()->create();
+
+        // Make a delete request to the API
+        $response = $this->delete(route('users.delete',['id'=>$user->id,'token' => $token]));
+
+        // Assert that the response status code is 200 (OK)
+        $response->assertStatus(Response::HTTP_OK);
+
+        // Assert that the user has been deleted from the database
+        $this->assertDatabaseMissing('users', [
+            'id' => $user->id,
+        ]);
+    }
+
+    /**
+     * 13. Test delete user with id and Invalid Token
+     *
+     * @return void
+     */
+    public function testDeleteUserWithInvalidToken()
+    {
+        // Create a user
+        $user = User::factory()->create();
+
+        // Make a delete request to the API
+        $response = $this->delete(route('users.delete',['id'=>$user->id,'token' => $this->faker->text(30)]));
+
+        // Assert that the response status code is 200 (OK)
+        $response->assertStatus(Response::HTTP_OK)
+                ->assertJson([
+                    'status' => __('UserManagement::messages.invalid_token'),
+                ]);
+
+        // Assert that the user has not been deleted from the database
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+        ]);
+    }
+
+    /**
+     * 14. Test delete user with non-existent id and valid Token
+     *
+     * @return void
+     */
+    public function testDeleteUserWithNonExistentIdAndValidToken()
+    {
+        // Create a user and generate a valid JWT token
+        $token = $this->getUserToken();
+
+        // Create a user
+        $user = User::factory()->create();
+
+        // Make a delete request to the API
+        $response = $this->delete(route('users.delete',['id'=>999,'token' => $token]));
+
+        // Assert that the response status code is 404 (Not Found)
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+
+        // Assert that the user has not been deleted from the database
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+        ]);
+    }
+
+     /**
+     * 15. Test fetch user roles with valid Token
+     *
+     * @return void
+     */
+    // public function testFetchUserRolesWithValidToken()
+    // {
+    //     // Create a user and generate a valid JWT token
+    //     $token = $this->getUserToken();
+
+    //     // Create a user and some roles
+    //     $userRole1 = UserRole::factory()->create();
+    //     $userRole2 = UserRole::factory()->create(['user_id' => $userRole1->user_id]);
+
+    //      // Assert that the check user exist in the database
+    //      $this->assertDatabaseHas('users', [
+    //         'id' => $userRole1->user_id,
+    //     ]);
+
+    //       // Assert that the roles exist in the database
+    //     $this->assertDatabaseHas('roles', [
+    //         'id' => $userRole1->role_id,
+    //     ]);
+
+    //     // Make a get request to the API
+    //     $response = $this->get(route('get_user_role',['id'=>$userRole1->user_id,'token' => $token]));
+
+    //     // Assert that the response status code is 200 (OK)
+    //     $response->assertStatus(Response::HTTP_OK);
+
+    //     // Assert that the response contains the expected data
+    //     $response->assertJson([
+    //         'status'  => true,
+    //         'message' => 'User Role Fetch Successfully',
+    //         'data'    => [
+    //             [
+    //                 'id'           => $userRole1->id,
+    //                 'user_id'      => $userRole1->user_id,
+    //                 'role_id'      => $userRole1->role_id,
+    //             ],
+    //             [
+    //                 'id'           => $userRole2->id,
+    //                 'user_id'      => $userRole2->user_id,
+    //                 'role_id'      => $userRole2->role_id,
+    //             ],
+    //         ],
+    //     ]);
+    // }
 
     private function getUserToken()
     {
