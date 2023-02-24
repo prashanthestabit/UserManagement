@@ -30,7 +30,7 @@ Step 2:- Run php artisan migrate
 1) Fecth User List
 
 ```bash
-URL:- http://127.0.0.1/api/users
+## URL:- /api/users
 Method:- GET
 Request Body:- token (required)
 Response:- 
