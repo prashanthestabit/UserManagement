@@ -49,8 +49,9 @@ Request Body:- token (required), name(required,string,max:255), email(required,e
 password (required,string,min:6.max:50,confirmation), password_confirmation (same as password).
 Response:- 
 2.1) If Success: HTTP_OK response code :- 200 send success message in JSON Format.
-2.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) HTTP_INTERNAL_SERVER_ERROR 
-response code:- 500 Internal Server Error with error message in JSON Format.
+2.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
+HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error
+message in JSON Format.
 ```
 
 
@@ -61,9 +62,11 @@ URL:- http://127.0.0.1/api/users/{id}
 Method:- GET
 Request Body:- token (required)
 Response:- 
-3.1) If Success: HTTP_OK response code :- 200 send success message with user information in JSON Format.
-3.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) HTTP_INTERNAL_SERVER_ERROR 
-response code:- 500 Internal Server Error with error message in JSON Format.
+3.1) If Success: HTTP_OK response code :- 200 send success message with user information
+in JSON Format.
+3.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
+HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error 
+message in JSON Format.
 ```
 
 
@@ -74,10 +77,11 @@ URL:- http://127.0.0.1/api/users/update
 Method:- PUT
 Request Body:- token (required), name(string,max:255), email(email,unique)
 Response:- 
-4.1) If Success: HTTP_OK response code :- 200 update user details and send success message with 
-user udpated information in JSON Format.
-4.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) HTTP_INTERNAL_SERVER_ERROR
-response code:- 500 Internal Server Error with error message in JSON Format.
+4.1) If Success: HTTP_OK response code :- 200 update user details and send success 
+message with user udpated information in JSON Format.
+4.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
+HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error
+message in JSON Format.
 ```
 
 
@@ -88,9 +92,10 @@ URL:- http://127.0.0.1/api/users/{id}
 Method:- DELETE
 Request Body:- token (required)
 Response:- 
-5.1) If Success: HTTP_OK response code :- 200 delete user data and send success message in JSON Format.
-5.2) If Unsuccess: HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error 
-message in JSON Format.
+5.1) If Success: HTTP_OK response code :- 200 delete user data and send success message
+in JSON Format.
+5.2) If Unsuccess: HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server
+Error with error message in JSON Format.
 ```
 
 
@@ -115,7 +120,8 @@ Method:- POST
 Request Body:- token (required), role_id (required,integer)
 Response:- 
 7.1) If Success: HTTP_OK response code :- 200 with success message in JSON Format.
-7.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) HTTP_INTERNAL_SERVER_ERROR
+7.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
+HTTP_INTERNAL_SERVER_ERROR
 response code:- 500 Internal Server Error with error message in JSON Format.
 ```
 
