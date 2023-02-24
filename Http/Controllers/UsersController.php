@@ -39,7 +39,7 @@ class UsersController extends Controller
         }catch(JWTException $e){
             return response()->json([
                 'status' => false,
-                'message' => 'Failed to fetch the users list'
+                'message' => __('UserManagement::messages.user.failed_list')
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -60,13 +60,13 @@ class UsersController extends Controller
             if($user){
                 return response()->json([
                     'status'  => true,
-                    'message' => 'User Registered Successfully',
+                    'message' => __('UserManagement::messages.user.successfully_registered'),
                     'data'    => $user
                 ],Response::HTTP_OK);
             }else{
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Failed To Register User',
+                    'message' => __('UserManagement::messages.user.failed_register'),
                     'data'    => array()
                 ],Response::HTTP_BAD_REQUEST);
             }
@@ -91,18 +91,18 @@ class UsersController extends Controller
             if(!$user){
                 return response()->json([
                     'status' => false,
-                    'message' => 'Failed to fetch the details'
+                    'message' => __('UserManagement::messages.user.failed')
                 ],Response::HTTP_BAD_REQUEST);
             }
             return response()->json([
                 'status'  => true,
-                'message' => 'Details Fetched Successfully',
+                'message' => __('UserManagement::messages.user.successfully_fetched'),
                 'data'    => $user
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status'  => false,
-                'message' => 'Invalid Access',
+                'message' => __('UserManagement::messages.user.invalid_access'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -124,18 +124,18 @@ class UsersController extends Controller
             if($user){
                 return response()->json([
                     'status'  => true,
-                    'message' => 'User Updated Successfully'
+                    'message' => __('UserManagement::messages.user.successfully_updated'),
                 ],Response::HTTP_OK);
             }else{
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Sorry!! Try again'
+                    'message' => __('UserManagement::messages.user.try_again'),
                 ],Response::HTTP_BAD_REQUEST);
             }
         }catch(JWTException $e){
             return response()->json([
                 'status'  => false,
-                'message' => 'Invalid Access',
+                'message' => __('UserManagement::messages.user.invalid_access'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -152,12 +152,12 @@ class UsersController extends Controller
             $user->delete();
             return response()->json([
                 'status'  => true,
-                'message' => 'User Deleted Successfully'
+                'message' => __('UserManagement::messages.user.successfully_deleted'),
             ],Response::HTTP_OK);
         }catch(JWTException $e){
             return response()->json([
                 'status'  => false,
-                'message' => 'Invalid Access',
+                'message' => __('UserManagement::messages.user.invalid_access'),
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
