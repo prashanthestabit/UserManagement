@@ -129,7 +129,7 @@ class UsersController extends Controller
             }else{
                 return response()->json([
                     'status'  => false,
-                    'message' => __('UserManagement::messages.user.try_again'),
+                    'message' => __('UserManagement::messages.try_again'),
                 ],Response::HTTP_BAD_REQUEST);
             }
         }catch(JWTException $e){

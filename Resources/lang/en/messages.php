@@ -40,7 +40,7 @@ return [
     'roles' => [
         'success_user_roles_list' => 'User Role Fetch Successfully',
         'failed_to_assign_role'   => 'Failed To Assign Role To User',
-        'successfully_assigned'   => 'Roles Assigned Successfully',
+        'successfully_assigned'   => 'Role Assigned Successfully',
         'roles_not_assigned'      => 'Role Not ASsigned To User',
         'roles_removed'           => 'Role Removed Successfully',
     ]
