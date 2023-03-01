@@ -36,9 +36,9 @@ Tip: don't forget to run composer dump-autoload afterwards
 Step 1.2: clone the code in modules folder
 
 ``` bash
-git clone https://github.com/prashanthestabit/AuthWithJWT.git
+git clone https://github.com/prashanthestabit/UserManagement.git
 ```
-Tip: don't forget to run php artisan module:enable AuthWithJWT afterwards
+Tip: don't forget to run php artisan module:enable UserManagement afterwards
 
 Step 2:- Run php artisan migrate
 
