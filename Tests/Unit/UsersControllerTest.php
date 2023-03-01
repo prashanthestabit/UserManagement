@@ -353,10 +353,10 @@ class UsersControllerTest extends TestCase
             'email' => $email,
         ]);
 
-        $response->assertStatus(Response::HTTP_BAD_REQUEST)
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
             ->assertJson([
                 'status' => false,
-                'message' => __('UserManagement::messages.try_again'),
+                'message' => __('UserManagement::messages.user.invalid_access'),
             ]);
 
         $updatedUser = User::find($user->id);
@@ -431,8 +431,8 @@ class UsersControllerTest extends TestCase
         // Make a delete request to the API
         $response = $this->delete(route('users.delete',['id'=>999,'token' => $token]));
 
-        // Assert that the response status code is 404 (Not Found)
-        $response->assertStatus(Response::HTTP_NOT_FOUND);
+        // Assert that the response status code is 500
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
 
         // Assert that the user has not been deleted from the database
         $this->assertDatabaseHas('users', [

@@ -3,6 +3,7 @@
 namespace Modules\UserManagement\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -12,9 +13,18 @@ use Modules\UserManagement\Http\Requests\UserCreateRequest;
 use Modules\UserManagement\Http\Requests\UserRegisterRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Modules\UserManagement\Repositories\UserRepository;
 
 class UsersController extends Controller
 {
+
+    protected $user;
+
+    public function __construct(UserRepository $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      * @return Response
@@ -22,25 +32,23 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         try{
-            $page = $request->input('page');
+            $users = $this->user->paginate($request);
 
-            $users = User::paginate($request->input('per_page'));
-            if(!$users){
-                return response()->json([
-                    'status'  =>  false,
-                    'message' => 'Failed to fetch the list'
-                ],Response::HTTP_BAD_REQUEST);
-            }
-            return response()->json([
+            $responseData = [
                 'status'  =>  true,
                 'message' => __('UserManagement::messages.user.successfully_list'),
                 'data'    => $users
-            ],Response::HTTP_OK);
-        }catch(JWTException $e){
-            return response()->json([
+            ];
+
+            return $this->user->responseMessage($responseData, Response::HTTP_OK);
+
+        }catch(Exception $e){
+            $responseData = [
                 'status' => false,
                 'message' => __('UserManagement::messages.user.failed_list')
-            ],Response::HTTP_INTERNAL_SERVER_ERROR);
+            ];
+
+            return $this->user->responseMessage($responseData, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -52,29 +60,38 @@ class UsersController extends Controller
     public function store(UserCreateRequest $request)
     {
         try{
-            $user = User::create([
+            $data = [
                 'name'     => $request->input('name'),
                 'email'    => $request->input('email'),
                 'password' => Hash::make($request->input('password'))
-            ]);
+            ];
+
+            $user = $this->user->register($data);
+
             if($user){
-                return response()->json([
+                $responseData = [
                     'status'  => true,
                     'message' => __('UserManagement::messages.user.successfully_registered'),
                     'data'    => $user
-                ],Response::HTTP_OK);
+                ];
+
+               return $this->user->responseMessage($responseData, Response::HTTP_OK);
             }else{
-                return response()->json([
+                $responseData = [
                     'status'  => false,
                     'message' => __('UserManagement::messages.user.failed_register'),
                     'data'    => array()
-                ],Response::HTTP_BAD_REQUEST);
+                ];
+
+               return $this->user->responseMessage($responseData, Response::HTTP_BAD_REQUEST);
             }
-        }catch(JWTException $e){
-            return response()->json([
+        }catch(Exception $e){
+            $responseData = [
                 'status' => false,
-                'message' => 'Invalid Access'
-            ],Response::HTTP_INTERNAL_SERVER_ERROR);
+                'message' => __('UserManagement::messages.invalid_access'),
+            ];
+
+           return $this->user->responseMessage($responseData, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -87,23 +104,29 @@ class UsersController extends Controller
     public function show(Request $request,$id)
     {
         try{
-            $user = User::find($id);
+            $user = $this->user->show(['id'=>$id]);
             if(!$user){
-                return response()->json([
+                $responseData = [
                     'status' => false,
                     'message' => __('UserManagement::messages.user.failed')
-                ],Response::HTTP_BAD_REQUEST);
+                ];
+
+               return $this->user->responseMessage($responseData, Response::HTTP_BAD_REQUEST);
             }
-            return response()->json([
+            $responseData = [
                 'status'  => true,
                 'message' => __('UserManagement::messages.user.successfully_fetched'),
                 'data'    => $user
-            ],Response::HTTP_OK);
-        }catch(JWTException $e){
-            return response()->json([
+            ];
+
+           return $this->user->responseMessage($responseData, Response::HTTP_OK);
+        }catch(Exception $e){
+            $responseData = [
                 'status'  => false,
                 'message' => __('UserManagement::messages.user.invalid_access'),
-            ],Response::HTTP_INTERNAL_SERVER_ERROR);
+            ];
+
+           return $this->user->responseMessage($responseData, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -116,27 +139,35 @@ class UsersController extends Controller
     public function update(UserCreateRequest $request)
     {
         try{
-
-            $user = User::whereId($request->input('id'))->update([
-                'name' => $request->input('name'),
-                'email'=> $request->input('email')
-            ]);
+            $user = $this->user->updateOrCreate(
+                ['id'=>$request->input('id')],
+                [
+                    'name' => $request->input('name'),
+                    'email'=> $request->input('email')
+                ]
+            );
             if($user){
-                return response()->json([
+                $responseData = [
                     'status'  => true,
                     'message' => __('UserManagement::messages.user.successfully_updated'),
-                ],Response::HTTP_OK);
+                ];
+
+               return $this->user->responseMessage($responseData, Response::HTTP_OK);
             }else{
-                return response()->json([
+                $responseData = [
                     'status'  => false,
                     'message' => __('UserManagement::messages.try_again'),
-                ],Response::HTTP_BAD_REQUEST);
+                ];
+
+               return $this->user->responseMessage($responseData, Response::HTTP_BAD_REQUEST);
             }
-        }catch(JWTException $e){
-            return response()->json([
+        }catch(Exception $e){
+            $responseData = [
                 'status'  => false,
                 'message' => __('UserManagement::messages.user.invalid_access'),
-            ],Response::HTTP_INTERNAL_SERVER_ERROR);
+            ];
+
+           return $this->user->responseMessage($responseData, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -148,17 +179,24 @@ class UsersController extends Controller
     public function destroy(Request $request,$id)
     {
         try{
-            $user = User::findOrFail($id);
-            $user->delete();
-            return response()->json([
+            $this->user->delete($id);
+
+            $responseData = [
                 'status'  => true,
                 'message' => __('UserManagement::messages.user.successfully_deleted'),
-            ],Response::HTTP_OK);
-        }catch(JWTException $e){
-            return response()->json([
+            ];
+
+           return $this->user->responseMessage($responseData, Response::HTTP_OK);
+
+        }catch(Exception $e){
+
+            $responseData = [
                 'status'  => false,
                 'message' => __('UserManagement::messages.user.invalid_access'),
-            ],Response::HTTP_INTERNAL_SERVER_ERROR);
+            ];
+
+           return $this->user->responseMessage($responseData, Response::HTTP_INTERNAL_SERVER_ERROR);
+
         }
     }
 }
