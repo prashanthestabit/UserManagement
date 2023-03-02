@@ -66,7 +66,7 @@ class UsersController extends Controller
                 'password' => Hash::make($request->input('password'))
             ];
 
-            $user = $this->user->register($data);
+            $user = $this->user->save($data);
 
             if($user){
                 $responseData = [

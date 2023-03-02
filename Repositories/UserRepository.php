@@ -10,7 +10,7 @@ use Modules\UserManagement\Entities\UserRole;
 /* Class UserRepository.
  * This class is responsible for handling database operations related to user with JWT.
  */
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     /**
      * Paginate all user data
@@ -22,12 +22,12 @@ class UserRepository
         return User::paginate($request->input('per_page'));
     }
     /**
-     * Register a new user with the given data.
+     * Save a new user with the given data.
      *
      * @param array $data
      * @return \App\Models\User
      */
-    public function register($data)
+    public function save($data)
     {
         $user = User::create($data);
         return $user;
