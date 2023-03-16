@@ -1,162 +1,176 @@
 # Introduction
 
-The User Management module is a pre-built and maintained module that provides all the necessary functionality for user manangement in a Laravel project. The module includes features such as user create, users list, fetch user by id, udpate user information, delete user, fetch roles assigned to user, assign roles to user and remove role assign to user. By using this module, developers can save time and effort in implementing these common user management features in their projects, while promoting consistency and standardization in module design and implementation.
+The User Management module is a pre-built and maintained module that provides all the necessary functionality for user manangement in a Laravel project. The module includes features such as user create, users list, fetch user by id, udpate user information, delete user, fetch roles assigned to user, assign roles to user and remove role assign to user. By using this module, developers can save time and effort in implementing these common user management features in their projects, while promoting consistency and standardization in module design and implementation.for this module we are using the JWT Authentication 
 
 
 # Requirement
 
-Laravel freamwork -nWidart/laravel-modules package, php 7.2 or higher
+1. [Laravel freamwork](https://laravel.com/) 
+2. [nWidart/laravel-modules package](https://nwidart.com/laravel-modules/v6/installation-and-setup)
+3. [JWT authentication](https://jwt-auth.readthedocs.io/en/develop/)
 
-# Tip
-For this User Management Module we are using the JWT Authentication 
 
 ## Steps to use this module
 
 
-Step 1:- Install Module Package Libraray
-
+#### Step 1:- Install Module Package Libraray
 
 ```bash
-composer require nwidart/laravel-modules
+ composer require nwidart/laravel-modules
 ```
-Step 1.1: Create Modules folder on root laravel project also register in composer.json
+ Step 1.1: Create Modules folder on root laravel project also register in composer.json
 
 ``` bash
-{
-  "autoload": {
-    "psr-4": {
-      "App\\": "app/",
-      "Modules\\": "Modules/"
+    {
+    "autoload": {
+        "psr-4": {
+        "App\\": "app/",
+        "Modules\\": "Modules/"
+        }
     }
-  }
-}
+    }
 ```
-Tip: don't forget to run composer dump-autoload afterwards
+<b>Tip:</b> don't forget to run <b>composer dump-autoload</b> afterwards
 
-Step 1.2: clone the code in modules folder
+##### Step 1.2: clone the code in Modules folder
+
+if don't have Modules folder on laravel root then create manually.
 
 ``` bash
-git clone https://github.com/prashanthestabit/UserManagement.git
+git clone https://github.com/Hestabit/UserManagement
 ```
-Tip: don't forget to run php artisan module:enable UserManagement afterwards
+<b>Tip:</b> don't forget to run <b>php artisan module:enable UserManagement</b> afterwards
 
 Step 2:- Run php artisan migrate
 
+## Features
+
+1) [User List](#1-userlist)
+2) [Create User](#2-createuser)
+3) [Fecth User Details By Id](#3-userdetails)
+4) [Update User](#4-updateuser)
+5) [Delete User](#5-deleteuser)
+6) [Fetch The Roles Assign To User](#6-fetchtherolesassigntouser)
+7) [Assign Role To User](#7-assignrole)
+8) [Audit Logs](#8-auditlogs)
 
 
 ## EndPoints
 
 
-1) Fecth User List
+#### 1. UserList
 
 ```bash
 URL:- /api/users
+
 Method:- GET
-Request Body:- token (required)
-Response:- 
-1.1) If Success: HTTP_OK response code :- 200 with JSON containing users list.
-1.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
-HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error
-message in JSON Format.
 ```
 
-2) Create User
+Request Body:- 
+
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
+
+
+#### 2. CreateUser
 
 ```bash
 URL:- /api/users/store
+
 Method:- POST
-Request Body:- token (required), name(required,string,max:255), email(required,email,unique),
-password (required,string,min:6.max:50,confirmation), password_confirmation (same as password).
-Response:- 
-2.1) If Success: HTTP_OK response code :- 200 send success message in JSON Format.
-2.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
-HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error
-message in JSON Format.
 ```
 
+Request Body:-
 
-3) Fecth User Details By Id
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     name            |     string         |       Yes           |       Name of the user         |
+|     email           |     email          |       Yes           |       Email of the user        |
+|    password         |     string         |       Yes           |       Password of the user     |
+|password_confirmation|     string         |       Yes           |       Confirm Pasword          |
+|     token           |     string         |       Yes           |       JWT Token                |
+
+
+#### 3. UserDetails
 
 ```bash
 URL:- /api/users/{id}
+
 Method:- GET
-Request Body:- token (required)
-Response:- 
-3.1) If Success: HTTP_OK response code :- 200 send success message with user information
-in JSON Format.
-3.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
-HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error 
-message in JSON Format.
 ```
+Request Body:- 
+
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
 
 
-4) Update User Details
+#### 4. UpdateUser
 
 ```bash
 URL:- /api/users/update
+
 Method:- PUT
-Request Body:- token (required), name(string,max:255), email(email,unique)
-Response:- 
-4.1) If Success: HTTP_OK response code :- 200 update user details and send success 
-message with user udpated information in JSON Format.
-4.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
-HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with error
-message in JSON Format.
 ```
+Request Body:- 
+
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
+|     name            |     string         |       Yes           |       Name of the user         |
+|     email           |     email          |       Yes           |       Email of the user        |
 
 
-5) Delete User
+#### 5. DeleteUser
 
 ```bash
 URL:- /api/users/{id}
 Method:- DELETE
-Request Body:- token (required)
-Response:- 
-5.1) If Success: HTTP_OK response code :- 200 delete user data and send success message
-in JSON Format.
-5.2) If Unsuccess: HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server
-Error with error message in JSON Format.
 ```
+Request Body:- 
+
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
 
 
-6) Fetch The Roles Assign To User
+#### 6. FetchTheRolesAssignToUser
 
 ```bash
 URL:- /api/user/{id}/roles
+
 Method:- GET
-Request Body:- token (required)
-Response:- 
-6.1) If Success: HTTP_OK response code :- 200 with assigned roles to user in JSON Format.
-6.2) If Unsuccess: HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with
-error message in JSON Format.
 ```
+Request Body:- 
 
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
 
-7) Assign Role To User
+#### 7. AssignRole
 
 ```bash
 URL:- /api/user/{id}/role
 Method:- POST
-Request Body:- token (required), role_id (required,integer)
-Response:- 
-7.1) If Success: HTTP_OK response code :- 200 with success message in JSON Format.
-7.2) If Unsuccess: HTTP_BAD_REQUEST response code :- 400 Bad Request (or) 
-HTTP_INTERNAL_SERVER_ERROR
-response code:- 500 Internal Server Error with error message in JSON Format.
 ```
+Request Body:- 
+
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
+|     role_id         |     integer        |       Yes           |      Role Id                   |
 
 
-8) Assign Role To User
+#### 8. DeleteRole
 
 ```bash
 URL:- /api/user/{id}/role/{role_id}
 Method:- DELETE
-Request Body:- token (required)
-Response:- 
-8.1) If Success: HTTP_OK response code :- 200 with success message in JSON Format.
-8.2) If Unsuccess: HTTP_INTERNAL_SERVER_ERROR response code:- 500 Internal Server Error with
-error message in JSON Format.
 ```
+|    Parameter        |     Type           |     Required        |          Description           |
+|:-------------------:|:------------------:|:-------------------:|:------------------------------:|
+|     token           |     string         |       Yes           |      JWT Token                 |
 
 ## NOTE:- For testing the api you can run the following command
 
